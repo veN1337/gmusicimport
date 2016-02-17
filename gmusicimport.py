@@ -14,6 +14,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# Fixed 'authentication' and 'score' erros by anfabio@gmail.com
 
 import getpass
 import argparse
@@ -35,7 +37,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print("Logging in as \"%s\" to Google Play Music" % args.username)
     pw = getpass.getpass()
-    if not client.login(args.username, pw):
+    if not client.login(args.username, pw, Mobileclient.FROM_MAC_ADDRESS):
         print("Authentication failed. Please check the provided credentials.")
     with open(args.source) as f:
         data = json.load(f)
@@ -54,16 +56,10 @@ if __name__ == "__main__":
             if args.verbose:
                 print("Fetching matches for %s" % query)
             for hit_i, hit in enumerate(results["song_hits"]):
-                if hit_i >= 10:
-                    break
-                if args.verbose and hit_i < 10:
-                    print("Hit %d, scoring %.02f: %s by %s in %s" %
-                            (hit_i + 1,
-                             hit["score"], hit["track"]["title"],
-                             hit["track"]["artist"], hit["track"]["album"]))
-                if hit["score"] > 50:
-                    match = hit["track"]["storeId"]
-                    break
+		trackDeets = hit["track"]["title"]
+		match = hit["track"]["storeId"]
+		print("Found match:\n%s" % trackDeets)
+		break
             if match is not None:
                 toimport.append(match)
             else:
