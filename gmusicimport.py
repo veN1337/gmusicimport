@@ -51,7 +51,7 @@ if __name__ == "__main__":
         toimport = []
         for track in playlist["tracks"]:
             query = "%s %s" % (track["title"], track["artist"])
-            results = client.search_all_access(query)
+            results = client.search(query)
             match = None
             if args.verbose:
                 print("Fetching matches for %s" % query)
